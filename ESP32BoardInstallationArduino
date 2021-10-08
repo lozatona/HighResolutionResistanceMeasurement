@@ -1,0 +1,5 @@
+Review the documentation of the manufacturer: 
+https://wiki.dfrobot.com/FireBeetle_Board_ESP32_E_SKU_DFR0654
+
+To add the board write down in the adress manager the following URL
+http://download.dfrobot.top/FireBeetle/package_DFRobot_index.json
