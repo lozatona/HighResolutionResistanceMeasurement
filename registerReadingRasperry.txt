@@ -1,0 +1,7 @@
+from machine import Pin, SoftSPI
+
+spi = SoftSPI(baudrate=1_000_000, polarity=0, phase=0, sck=Pin(0), mosi=Pin(2), miso=Pin(1))
+
+x=spi.read(4, 0x61)
+
+x
