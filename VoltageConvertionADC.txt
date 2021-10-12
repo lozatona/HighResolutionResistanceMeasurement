@@ -1,0 +1,25 @@
+from machine import Pin, SoftSPI
+spi = SoftSPI(baudrate=1_000_000, polarity=0, phase=0, sck=Pin(0), mosi=Pin(2), miso=Pin(1))
+x=spi.read(1, 0x19)		#Config_0 Register 
+x=spi.read(1, 0x00)		#Unipolar 
+x=spi.read(1, 0x10) 		#Internal Reference, Gain=1
+
+
+x=spi.read(1, 0x09) 	#Channel_0 Register 
+x=spi.read(1, 0x80)		#Enable Channel_0, setup_0
+x=spi.read(1, 0x13)		#AINP=AIN0, AINM=GND
+
+x=spi.read(1, 0x01)		#ADC_Control Register 
+x=spi.read(1, 0x01)		#Single convertion , Internal reference=2.5V
+x=spi.read(1, 0x00)		#Low Power mode, Internal CLK 
+
+
+def conv(data):
+	vx=data*2.5/16777216
+	print(vx)
+
+
+x=spi.read(4, 0x42)		#Data register 
+x				
+>>> a=0xa7ad9b			#copy the data in a new variable fo use the conv function 
+>>> conv(a)			#conversion result in volts [V]
