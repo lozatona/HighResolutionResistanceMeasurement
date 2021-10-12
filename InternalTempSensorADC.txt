@@ -1,0 +1,21 @@
+from machine import Pin, SoftSPI
+spi = SoftSPI(baudrate=1_000_000, polarity=0, phase=0, sck=Pin(0), mosi=Pin(2), miso=Pin(1))
+
+x=spi.read(1, 0x09)		#Channel_0 Register 
+x=spi.read(1, 0xb2)	
+x=spi.read(1, 0x13)
+
+x=spi.read(1, 0x19)		#Config_0
+x=spi.read(1, 0x08)
+x=spi.read(1, 0x10)
+
+x=spi.read(1, 0x01)		#ADC_control 
+x=spi.read(1, 0x01)
+x=spi.read(1, 0x00)
+
+x=spi.read(4, 0x42)		#ADC_Data
+
+#for the convertion follow the next algorithm 
+#	t=x-0x800000
+#	t=t/13584
+#	t=t-272.5		the result is in °C
