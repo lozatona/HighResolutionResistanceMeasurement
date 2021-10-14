@@ -37,8 +37,6 @@ def GPIO_Init():
     #bipolar
     #gain=16
     #ref(+), ref(-)  
-    #full power mode 
-    #single convertion
     x=spi.read(1, 0x19)
     x=spi.read(1, 0x08)
     x=spi.read(1, 0x04)
