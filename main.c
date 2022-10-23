@@ -57,32 +57,29 @@ void ADC14_IRQHandler(void) {
     float RG=498.89;
     float G=1+49400/RG;
     float R=500;
-    float R2=7814;
+    float R2=7600;
     float R3=9000;
-    float R4=31288;
+    float R4=63500;
     float VDD=3.3;
     float a,offset,VLIA,v_io1,v_io2;
-    //float val_adc;
-    //float Vx;
 
     offset = VDD*((R3*R4/(R3+R4))/(R2+(R3*R4/(R3+R4))));
     a=((R2*R4/(R2+R4))/(R3+(R2*R4/(R2+R4))));
     a=1/a;
     val_adc=ADC14->MEM[0];
     SysTick_Wait(900);//T=n/3e+06
-    //val_v=val_adc/6553.6;
     v_adc=val_adc/4964.85;
     VLIA = a*(v_adc-offset);
     Vx= VLIA/G;
 
     if (v_adc > offset){ //caso 1
-        v_io1=3.02;
-        v_io2=0.206;
+        v_io1=3.035;
+        v_io2=0.780;
         Rx=2*R*Vx/(v_io1-v_io2-Vx);
     }
     else{    //caso 2
-        v_io1=0.168;
-        v_io2=2.92;
+        v_io1=0.801;
+        v_io2=3.050;
         Rx=-2*R*Vx/(v_io2-v_io1+Vx);
     }
     SysTick_Wait(900);
