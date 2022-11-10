@@ -7,7 +7,7 @@ float val_adc,Vx;
 void GPIO_Init(void){
     P1->SEL0 = 0X00;
     P1->SEL1 = 0X00;
-    P1->DIR = 0X01;    //set P3.0 output
+    P1->DIR = 0X01;    //set P1.0 output
     P1->OUT = 0X01;
 
     P3->SEL0 = 0X00;
@@ -54,32 +54,33 @@ void ADC_Init(void){
 //********************INTERRUPCIONES**********************************************************
 // ADC14 interrupt service routine
 void ADC14_IRQHandler(void) {
-    float RG=498.89;
-    float G=1+49400/RG;
-    float R=500;
+    //float RG=498.89;
+    //float G=1+49400/RG;
+    float G=100;
+    float R=101;
     float R2=7600;
-    float R3=9000;
-    float R4=63500;
-    float VDD=3.3;
+    float R3=9030;
+    float R4=63600;
+    float VDD=3.295;
     float a,offset,VLIA,v_io1,v_io2;
 
+    SysTick_Wait(900000);//T=n/3e+06
+    val_adc=ADC14->MEM[0];
     offset = VDD*((R3*R4/(R3+R4))/(R2+(R3*R4/(R3+R4))));
     a=((R2*R4/(R2+R4))/(R3+(R2*R4/(R2+R4))));
     a=1/a;
-    val_adc=ADC14->MEM[0];
-    SysTick_Wait(900);//T=n/3e+06
-    v_adc=val_adc/4964.85;
+    v_adc=val_adc*3.2/16384; //Vref 3.3V
     VLIA = a*(v_adc-offset);
     Vx= VLIA/G;
 
     if (v_adc > offset){ //caso 1
-        v_io1=3.035;
-        v_io2=0.780;
+        v_io1=2.472; //ajustar segun sea necesario
+        v_io2=0.817; //ajustar segun sea necesario
         Rx=2*R*Vx/(v_io1-v_io2-Vx);
     }
     else{    //caso 2
-        v_io1=0.801;
-        v_io2=3.050;
+        v_io1=0.802; //ajustar segun sea necesario
+        v_io2=2.464; //ajustar segun sea necesario
         Rx=-2*R*Vx/(v_io2-v_io1+Vx);
     }
     SysTick_Wait(900);
@@ -101,12 +102,12 @@ int main(void) {
         P4->OUT = (P4->OUT&(0x01)) ^ 1;
         P1->OUT = (P1->OUT&(0x01)) ^ 1;
 
-        //for (i = 20000; i > 0; i--);        // Delay
         // Start sampling/conversion
-        SysTick_Wait(9000000);//T=n/3e+06   3s
         ADC14->CTL0 |= ADC14_CTL0_ENC | ADC14_CTL0_SC;
+        SysTick_Wait(30000000);//T=n/3e+06   3s
         __sleep();
         __no_operation();                   // For debugger
     }
 }//end MAIN
+
 
